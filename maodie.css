@@ -1,0 +1,2638 @@
+/* ============================================================
+   Maodie — Typora Theme (Light)
+   Step 1: Variables, fonts, base layout
+   Step 2: Headings, links, emphasis, lists, blockquote
+   ------------------------------------------------------------
+   资源目录结构约定：
+     themes/
+     ├── maodie.css              ← 本文件
+     └── maodie/
+         ├── fonts/
+         │   └── c66fc489e-C-BHYa_K.woff2   (Anthropic Serif)
+         ├── cat.gif             ← 侧栏底部骑车耄耋（40x40 朝左）
+         ├── run.gif             ← 主滚动条上跑步耄耋（40x40，附在 thumb 上）
+         ├── face-1.png          ← 无序列表 L1 marker（64x64 圆形扣图，20px 显示）
+         ├── face-2.png          ← 无序列表 L2 marker（18px 显示）
+         ├── face-3.png          ← 无序列表 L3 marker（16px 显示）
+         ├── face-4.png          ← 无序列表 L4 marker（14px 显示）
+         ├── face-5.png          ← 无序列表 L5 marker（14px 显示，与 L4 同尺寸）
+         └── face-6.png          ← H1-H6 编辑态左侧层级提示，按层级数量铺排，
+                                   尺寸从 H1=20px 递减到 H6=10px
+   ------------------------------------------------------------
+   色板：暗金棕（Mellow Bronze）
+     主色 8 + 功能色 3 + 半透明叠加做临时态
+     原则：色板不膨胀，hover / selection / mark 全由 rgba 派生
+     气质：accent 沉稳，c-amber 清亮，UI 主强调靠位置而非亮度
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. 字体声明
+   ------------------------------------------------------------ */
+@font-face {
+    font-family: "Anthropic Serif";
+    src: url("./maodie/fonts/c66fc489e-C-BHYa_K.woff2") format("woff2");
+    font-weight: 300 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* ------------------------------------------------------------
+   2. 色板与字体变量
+   ------------------------------------------------------------ */
+:root {
+    /* —— 背景三层 —— */
+    --bg-main:        #FAF3E5;
+    --bg-raised:      #F5EAD0;
+    --bg-deep:        #E5D4AB;
+
+    /* —— 文本三层 —— */
+    --text-primary:   #39140A;
+    --text-secondary: #805C30;
+    --text-muted:     #8E7858;
+
+    /* —— 强调双色（accent 暗金棕，bright 深棕加纯）—— */
+    --accent:         #926E39;
+    --accent-bright:  #6E4E20;
+
+    /* —— 边框 —— */
+    --border:         #DCC6A0;
+
+    /* —— 功能色 —— */
+    --c-amber:        #AE7821;
+    --c-blue:         #2A5482;
+    --c-rose:         #B82318;
+
+    /* —— Typora 原生变量映射 —— */
+    --bg-color:                 var(--bg-main);
+    --text-color:               var(--text-primary);
+    --side-bar-bg-color:        var(--bg-deep);
+    --control-text-color:       var(--text-muted);
+    --primary-color:            var(--accent);
+    --primary-btn-border-color: var(--accent);
+    --primary-btn-text-color:   #FFFFFF;
+    --md-char-color:            var(--text-muted);
+    --meta-content-color:       var(--text-muted);
+    --window-border:            1px solid var(--border);
+    --item-hover-bg-color:      var(--bg-raised);
+    --item-hover-text-color:    var(--text-primary);
+    --active-file-bg-color:     rgba(146, 110, 57, 0.20);
+    --active-file-border-color: var(--accent);
+    --active-file-text-color:   var(--text-primary);
+    --monospace:                var(--font-mono);
+
+    /* —— 字体栈 —— */
+    --font-body: "Anthropic Serif", Georgia, "Times New Roman",
+                 "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC",
+                 "PingFang SC", "Hiragino Sans GB", serif;
+    --font-ui:   "Anthropic Serif", Georgia,
+                 "Songti SC", "PingFang SC", "Hiragino Sans GB",
+                 "Noto Sans CJK SC", "Source Han Sans SC",
+                 "Microsoft YaHei", "Segoe UI", sans-serif;
+    --font-mono: Menlo, Monaco, "SF Mono", Consolas,
+                 "Sarasa Mono SC", "Cascadia Code", monospace;
+}
+
+
+/* ------------------------------------------------------------
+   3. 基础排版
+   ------------------------------------------------------------ */
+html {
+    font-size: 16px;
+    font-family: var(--font-body);
+    background-color: var(--bg-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    color: var(--text-primary);
+    background-color: var(--bg-main);
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+    caret-color: var(--accent);
+}
+
+::selection {
+    background: rgba(146, 110, 57, 0.28);
+    color: var(--text-primary);
+}
+
+.mac-seamless-mode {
+    background-color: var(--bg-deep);
+}
+
+
+/* ------------------------------------------------------------
+   4. 写作区容器
+   ------------------------------------------------------------ */
+#write {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 48px 120px;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+@media only screen and (min-width: 1400px) {
+    #write { max-width: 960px; }
+}
+
+@media only screen and (min-width: 1800px) {
+    #write { max-width: 1120px; }
+}
+
+#write > ul:first-child,
+#write > ol:first-child {
+    margin-top: 30px;
+}
+
+
+/* ------------------------------------------------------------
+   5. 通用块级间距
+   ------------------------------------------------------------ */
+p,
+blockquote,
+ul,
+ol,
+dl,
+table {
+    margin: 0.85em 0;
+}
+
+li > ol,
+li > ul {
+    margin: 0;
+}
+
+ul:first-child,
+ol:first-child { margin-top: 0; }
+
+ul:last-child,
+ol:last-child  { margin-bottom: 0; }
+
+
+/* ------------------------------------------------------------
+   6. 滚动条
+   ------------------------------------------------------------ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+    transition: background 0.15s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+
+/* ------------------------------------------------------------
+   7. 打印兜底
+   ------------------------------------------------------------ */
+@media print {
+    html {
+        font-size: 13px;
+        background-color: #ffffff;
+    }
+    body {
+        color: #000000;
+        background-color: #ffffff;
+    }
+    #write {
+        background-color: #ffffff;
+        color: #000000;
+        max-width: 100%;
+        padding: 0;
+    }
+    pre {
+        page-break-inside: avoid;
+        word-wrap: break-word;
+    }
+}
+
+
+/* ============================================================
+   STEP 2 — Headings, links, emphasis, lists, blockquote
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   8. 标题
+   ------------------------------------------------------------
+   H1 用 accent-bright 字色，下方 1px accent 实线作题尾，最重磅
+   H2 默认色，下方 1px var(--border) 线，二级节奏
+   H3-H4 默认色加粗
+   H5 text-secondary 加粗
+   H6 text-muted 常规字重，灰隐感
+   ------------------------------------------------------------ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin-top: 1.6em;
+    margin-bottom: 0.8em;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-weight: 700;
+    line-height: 1.35;
+    cursor: text;
+    letter-spacing: 0;
+}
+
+h1 {
+    font-size: 2.4rem;
+    line-height: 1.25;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid var(--accent);
+    margin-top: 0.6em;
+    color: var(--accent-bright);
+}
+
+h2 {
+    font-size: 1.85rem;
+    line-height: 1.3;
+    padding-bottom: 0.25em;
+    border-bottom: 1px solid var(--border);
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+h5 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+h6 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+/* 标题中行内代码不强行缩字号，避免视觉跳跃 */
+h1 tt, h1 code,
+h2 tt, h2 code,
+h3 tt, h3 code,
+h4 tt, h4 code,
+h5 tt, h5 code,
+h6 tt, h6 code {
+    font-size: inherit;
+}
+
+/* 锚点 hover 时不要下划线，避免与标题文字混淆 */
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+    text-decoration: none;
+}
+
+/* 编辑模式下，光标进入标题会在左侧显示耄耋脸图标提示当前层级
+   H1=1 张 face-6，H6=6 张，紧贴排列。
+
+   Typora 1.13 原本只给 H3-H6 的 ::before 设了位置（显示 "h3" "h4"
+   这类层级文字标签），H1 H2 没有。这里强制给 H1-H6 全部 ::before
+   设 position/display，让 H1 H2 也激活出来。
+
+   尺寸按层级递减 H1=20 → H6=10，每级减 2px。猫脸紧贴 0 间距。
+   每级独立设 left = -(width + 4px)，让 ::before 右边稳定在文本
+   左侧 4px 外，不论 N 多少都不挡字。
+
+   依赖：themes/maodie/face-6.png */
+#write > h1.md-focus::before,
+#write > h2.md-focus::before,
+#write > h3.md-focus::before,
+#write > h4.md-focus::before,
+#write > h5.md-focus::before,
+#write > h6.md-focus::before {
+    content: "" !important;
+    display: inline-block !important;
+    position: absolute !important;
+    color: transparent !important;
+    background-color: transparent !important;
+    background-repeat: no-repeat !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+#write > h1.md-focus::before {
+    background-image: url("./maodie/face-6.png") !important;
+    background-size: 20px 20px !important;
+    background-position: 0 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    left: -24px !important;
+}
+
+#write > h2.md-focus::before {
+    background-image:
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png") !important;
+    background-size: 18px 18px, 18px 18px !important;
+    background-position: 0 50%, 18px 50% !important;
+    width: 36px !important;
+    height: 18px !important;
+    left: -40px !important;
+}
+
+#write > h3.md-focus::before {
+    background-image:
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png") !important;
+    background-size: 16px 16px, 16px 16px, 16px 16px !important;
+    background-position: 0 50%, 16px 50%, 32px 50% !important;
+    width: 48px !important;
+    height: 16px !important;
+    left: -52px !important;
+}
+
+#write > h4.md-focus::before {
+    background-image:
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png") !important;
+    background-size: 14px 14px, 14px 14px, 14px 14px, 14px 14px !important;
+    background-position: 0 50%, 14px 50%, 28px 50%, 42px 50% !important;
+    width: 56px !important;
+    height: 14px !important;
+    left: -60px !important;
+}
+
+#write > h5.md-focus::before {
+    background-image:
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png") !important;
+    background-size: 12px 12px, 12px 12px, 12px 12px, 12px 12px, 12px 12px !important;
+    background-position: 0 50%, 12px 50%, 24px 50%, 36px 50%, 48px 50% !important;
+    width: 60px !important;
+    height: 12px !important;
+    left: -64px !important;
+}
+
+#write > h6.md-focus::before {
+    background-image:
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png"),
+        url("./maodie/face-6.png") !important;
+    background-size: 10px 10px, 10px 10px, 10px 10px, 10px 10px, 10px 10px, 10px 10px !important;
+    background-position: 0 50%, 10px 50%, 20px 50%, 30px 50%, 40px 50%, 50px 50% !important;
+    width: 60px !important;
+    height: 10px !important;
+    left: -64px !important;
+}
+
+
+/* ------------------------------------------------------------
+   9. 链接
+   ------------------------------------------------------------
+   默认下划线用 35% 透明度的 accent 做"低强调"，
+   hover 时跳到实色 accent-bright 同时下划线变实
+   ------------------------------------------------------------ */
+a {
+    color: var(--accent-bright);
+    text-decoration: underline;
+    text-decoration-thickness: 0.05em;
+    text-decoration-color: rgba(146, 110, 57, 0.45);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.15s ease,
+                color 0.15s ease;
+}
+
+a:hover {
+    color: var(--accent-bright);
+    text-decoration-color: var(--accent-bright);
+}
+
+a:visited {
+    color: var(--accent-bright);
+}
+
+
+/* ------------------------------------------------------------
+   10. 行内强调
+   ------------------------------------------------------------
+   粗体加字重 + 切到 accent-bright 做"声调上扬"
+   斜体只依赖 Anthropic Serif 的真斜体字形
+   md-tag 是 Typora 包裹 **、_、# 等语法符号的元素，弱化它
+   ------------------------------------------------------------ */
+strong {
+    font-weight: 700;
+    color: var(--accent-bright);
+}
+
+em {
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+strong em,
+em strong {
+    font-weight: 700;
+    font-style: italic;
+    color: var(--accent-bright);
+}
+
+/* Markdown 语法符号（** _ # 等） */
+.md-tag {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+/* 上下标 */
+sub, sup {
+    font-size: 0.75em;
+    color: var(--text-secondary);
+}
+
+/* 删除线 */
+del,
+s {
+    color: var(--text-muted);
+    text-decoration-color: var(--text-muted);
+}
+
+
+/* ------------------------------------------------------------
+   11. 列表
+   ------------------------------------------------------------
+   无序列表前五层用耄耋脸 PNG 做 marker，缩放 20 / 18 / 16 / 14 / 12 px。
+   注意：::marker 伪元素不支持 background-image，所以
+   用 list-style: none + li::before 绝对定位画图标。
+   任务列表的 ::before 已经画了复选框，用 :not(.md-task-list-item)
+   把两者隔开互不打架。
+   第六层起退回原生 disc，色阶按 65 / 45 / 30 / 20% 递进。
+
+   所有规则限定到 #write 范围。原因：Typora 的右侧大纲面板
+   也用 ul / li 渲染标题层级，全局选择器会让猫脸出现在大纲里
+   并被面板边框遮挡。#write 限定后，大纲、文件树等所有 UI 列表
+   都恢复 Typora 默认外观。
+   ------------------------------------------------------------ */
+#write ul,
+#write ol {
+    padding-left: 2em;
+}
+
+#write li {
+    margin: 0.25em 0;
+}
+
+/* —— 无序列表：前五层猫脸 marker —— */
+
+/* L1 — face-1.png，20px */
+#write ul > li:not(.md-task-list-item) {
+    list-style: none;
+    position: relative;
+}
+
+#write ul > li:not(.md-task-list-item)::before {
+    content: "";
+    position: absolute;
+    left: -1.55em;
+    top: 0.28em;
+    width: 20px;
+    height: 20px;
+    background-image: url("./maodie/face-1.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* L2 — face-2.png，18px */
+#write ul ul > li:not(.md-task-list-item)::before {
+    background-image: url("./maodie/face-2.png");
+    width: 18px;
+    height: 18px;
+    top: 0.34em;
+    left: -1.45em;
+}
+
+/* L3 — face-3.png，16px */
+#write ul ul ul > li:not(.md-task-list-item)::before {
+    background-image: url("./maodie/face-3.png");
+    width: 16px;
+    height: 16px;
+    top: 0.42em;
+    left: -1.3em;
+}
+
+/* L4 — face-4.png，14px */
+#write ul ul ul ul > li:not(.md-task-list-item)::before {
+    background-image: url("./maodie/face-4.png");
+    width: 14px;
+    height: 14px;
+    top: 0.48em;
+    left: -1.2em;
+}
+
+/* L5 — face-5.png，14px（与 L4 同尺寸） */
+#write ul ul ul ul ul > li:not(.md-task-list-item)::before {
+    background-image: url("./maodie/face-5.png");
+    width: 14px;
+    height: 14px;
+    top: 0.48em;
+    left: -1.2em;
+}
+
+/* L6+ 退回原生 disc，禁用 ::before */
+#write ul ul ul ul ul ul > li:not(.md-task-list-item) {
+    list-style: disc;
+}
+
+#write ul ul ul ul ul ul > li:not(.md-task-list-item)::before {
+    content: none;
+}
+
+#write ul ul ul ul ul ul > li::marker {
+    color: var(--text-muted);
+}
+
+#write ul ul ul ul ul ul ul > li::marker {
+    color: rgba(142, 120, 88, 0.70);
+}
+
+#write ul ul ul ul ul ul ul ul > li::marker {
+    color: rgba(142, 120, 88, 0.50);
+}
+
+#write ul ul ul ul ul ul ul ul ul > li::marker {
+    color: rgba(142, 120, 88, 0.35);
+}
+
+#write ul ul ul ul ul ul ul ul ul ul > li::marker {
+    color: rgba(142, 120, 88, 0.25);
+}
+
+/* —— 有序列表：数字 marker 用 accent —— */
+#write ol > li::marker {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* 列表项中如果直接挂段落（Typora 渲染时会包 p），让它内联 */
+#write li p.first {
+    display: inline-block;
+}
+
+#write li p {
+    margin: 0.2em 0;
+}
+
+
+/* ------------------------------------------------------------
+   12. 任务列表
+   ------------------------------------------------------------
+   Typora 编辑模式下原生 <input type="checkbox"> 带 disabled 属性，
+   直接对它写 appearance: none 在不同 Electron 版本上渲染不一致，
+   常常只剩几像素。稳妥做法是把原生 input 透明化保留点击响应，
+   视觉由父级 li 的 ::before / ::after 重新绘制。
+   ------------------------------------------------------------ */
+.md-task-list-item {
+    list-style: none;
+    position: relative;
+}
+
+/* 原生 checkbox 完全透明但保留尺寸和点击触发 */
+.md-task-list-item > input[type="checkbox"] {
+    position: absolute;
+    left: -1.6em;
+    top: 0.5em;
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* 复选框外框，绘制在 li 自己身上 */
+.md-task-list-item::before {
+    content: "";
+    position: absolute;
+    left: -1.6em;
+    top: 0.5em;
+    width: 14px;
+    height: 14px;
+    box-sizing: border-box;
+    border: 1.5px solid var(--accent);
+    border-radius: 3px;
+    background: var(--bg-main);
+    transition: background 0.15s ease, border-color 0.15s ease;
+    z-index: 1;
+}
+
+.md-task-list-item:hover::before {
+    border-color: var(--accent-bright);
+}
+
+/* 勾选态采用双重选择器：
+   - .task-list-done 类是 Typora 渲染态会加的
+   - :has(> input:checked) 是兜底，覆盖新版 Chromium 内核 */
+.md-task-list-item.task-list-done::before,
+.md-task-list-item:has(> input:checked)::before {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+/* 对勾本身用 ::after 绘制，颜色取背景色形成"挖空"感
+   对勾是 4x8 矩形绕中心旋转 45°，几何中心相对自身 left/top 偏移 (2, 4)，
+   要让对勾中心对齐 14x14 外框中心 (-1.6em + 7px, 0.5em + 7px)，
+   反推 left = -1.6em + 5px, top = 0.5em + 3px */
+.md-task-list-item.task-list-done::after,
+.md-task-list-item:has(> input:checked)::after {
+    content: "";
+    position: absolute;
+    left: calc(-1.6em + 5px);
+    top: calc(0.5em + 3px);
+    width: 4px;
+    height: 8px;
+    box-sizing: border-box;
+    border: solid var(--bg-main);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 已勾选项整行淡化、加删除线
+   text-decoration 只作用于文字，不会影响伪元素绘制的复选框 */
+.md-task-list-item.task-list-done {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--text-muted);
+}
+
+
+/* ------------------------------------------------------------
+   13. 引用块
+   ------------------------------------------------------------
+   第一层：左条 4px accent + 极淡橘底 + 圆角
+   嵌套层：左条按 65 / 45 / 30 / 20% 递进，底色去掉防止叠浊
+   ------------------------------------------------------------ */
+blockquote {
+    border-left: 4px solid var(--accent);
+    background: rgba(146, 110, 57, 0.08);
+    padding: 0.6em 1.2em;
+    margin: 1em 0;
+    color: var(--text-secondary);
+    border-radius: 0 4px 4px 0;
+}
+
+/* 引用块里的斜体改用 accent-bright，做"点亮"的语气 */
+blockquote em {
+    color: var(--accent-bright);
+}
+
+/* 引用块里的标题继承主文本色，但稍降字号节奏 */
+blockquote h1,
+blockquote h2,
+blockquote h3,
+blockquote h4,
+blockquote h5,
+blockquote h6 {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-top: 0.4em;
+}
+
+/* 嵌套引用：左边框按 65 / 45 / 30 / 20% 递进，触底维持最低亮度 */
+blockquote blockquote {
+    border-left-color: rgba(146, 110, 57, 0.70);
+    background: transparent;
+    padding-right: 0;
+    margin: 0.5em 0;
+}
+
+blockquote blockquote blockquote {
+    border-left-color: rgba(146, 110, 57, 0.50);
+}
+
+blockquote blockquote blockquote blockquote {
+    border-left-color: rgba(146, 110, 57, 0.38);
+}
+
+blockquote blockquote blockquote blockquote blockquote {
+    border-left-color: rgba(146, 110, 57, 0.28);
+}
+
+
+/* ------------------------------------------------------------
+   14. Focus 模式微调
+   ------------------------------------------------------------ */
+.on-focus-mode blockquote {
+    border-left-color: rgba(146, 110, 57, 0.32);
+}
+
+
+/* ============================================================
+   STEP 3 — Inline code, fenced code, meta block, syntax highlight
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   15. 行内代码
+   ------------------------------------------------------------
+   bg-raised 底 + c-amber 字 + 细边框 + 圆角，
+   字号比正文略小一档让代码"嵌"进字句里
+   ------------------------------------------------------------ */
+code,
+tt {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background-color: var(--bg-raised);
+    color: var(--c-amber);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    letter-spacing: 0;
+}
+
+/* 链接里的 code 继承链接色，避免与 amber 撞色 */
+a code,
+a tt {
+    color: inherit;
+}
+
+
+/* ------------------------------------------------------------
+   16. 代码块容器（.md-fences 是 Typora 的围栏代码块）
+   ------------------------------------------------------------
+   左侧 3px 主强调装饰条注意不用 border-left 实现：
+   3px 左边框与 1px 上下边框相交时浏览器会做 45° miter，
+   导致左上 / 左下两个角被斜切成轻微梯形。
+   改用 ::before 浮在边框之上做装饰条，从根本上避开角冲突。
+   width: 4px 覆盖 1px 边框 + 露出 3px 净宽。
+   ------------------------------------------------------------ */
+.md-fences {
+    position: relative;
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    line-height: 1.6;
+    background-color: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 0 4px 4px 0;
+    padding: 14px 18px;
+    margin: 1em 0;
+    color: var(--text-primary);
+}
+
+.md-fences::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    width: 4px;
+    background: var(--accent);
+    pointer-events: none;
+}
+
+/* CodeMirror 在围栏代码块中渲染，左侧内边距留给行号空间 */
+.CodeMirror-lines {
+    padding-left: 4px;
+}
+
+/* 代码块内的行内 code 不再叠加边框背景，回归纯文本 */
+.md-fences code,
+.md-fences tt {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+}
+
+/* 右上角语言标签 */
+.md-fences .md-lang,
+.md-lang {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    font-style: normal;
+    letter-spacing: 0.02em;
+}
+
+/* 代码块底部的工具栏 / 通用浮动 tooltip
+   ------------------------------------------------------------
+   Typora 用 .code-tooltip 作为多种悬浮预览的通用载体，
+   涵盖 inline math 预览（#math-inline-preview）、脚注 popover、
+   代码块底部工具栏等。Typora 1.13 会在这些元素上叠加内联深色
+   背景，所以下面用 !important 强制接管颜色。
+
+   不要给 .code-tooltip 加 position 或 isolation，
+   这些会破坏 Typora 内部对 tooltip 的 absolute 定位和宽度约束，
+   导致 tooltip 异常变长。这里只接管颜色，不动定位。
+
+   箭头处理：放弃描边方案，让箭头与主体同色融合。
+   所有可能影响箭头视觉的属性都填 bg-raised，
+   箭头变成"主体的一个尖角延伸"。 */
+.code-tooltip {
+    background-color: var(--bg-raised) !important;
+    border: none !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 4px 16px rgba(57, 20, 10, 0.18) !important;
+    font-family: var(--font-ui);
+}
+
+.code-tooltip-content {
+    background-color: transparent !important;
+    color: var(--text-primary) !important;
+}
+
+/* 箭头三层全部填浅色，与主体融合，无边框 */
+.code-tooltip .md-arrow,
+.code-tooltip .md-arrow::before,
+.code-tooltip .md-arrow::after {
+    background-color: var(--bg-raised) !important;
+    border-color: var(--bg-raised) !important;
+    box-shadow: none !important;
+}
+
+/* MathJax 在 .code-tooltip 内部时强制亮色，
+   覆盖 HTML 渲染（color）与 SVG 渲染（fill / stroke）两种模式 */
+.code-tooltip .MathJax,
+.code-tooltip .MathJax_Display,
+.code-tooltip .MathJax_SVG,
+.code-tooltip .MathJax_SVG_Display {
+    color: var(--text-primary) !important;
+    background-color: transparent !important;
+}
+
+.code-tooltip .MathJax_SVG * {
+    fill: var(--text-primary) !important;
+    stroke: var(--text-primary) !important;
+}
+
+
+/* ------------------------------------------------------------
+   17. YAML / Meta Block（文档顶部的元信息块）
+   ------------------------------------------------------------
+   与代码块、注释块同构：1px 全边框 + 左侧 ::before 装饰条覆盖
+   1px 左边框，避免 border-left + 1px 上下边框的 miter 切角。
+   装饰条颜色走 accent，和代码块同档。
+
+   注：pre 元素默认带 overflow，会裁切 absolute 伪元素超出
+   padding box 的部分。装饰条 top/bottom 设 -1px 才能盖住
+   外边框，因此强制 overflow: visible !important 释放剪裁。
+   ------------------------------------------------------------ */
+#write pre.md-meta-block {
+    position: relative;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    line-height: 1.45;
+    background-color: var(--bg-raised);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 0 4px 4px 0;
+    padding: 1rem 1.2rem;
+    margin-top: 0 !important;
+    overflow: visible !important;
+}
+
+#write pre.md-meta-block::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    width: 4px;
+    background: var(--accent);
+    pointer-events: none;
+}
+
+
+/* ------------------------------------------------------------
+   18. CodeMirror 编辑器基础
+   ------------------------------------------------------------ */
+.CodeMirror {
+    background: transparent !important;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+}
+
+.CodeMirror-gutters {
+    background: transparent !important;
+    border-right: 1px solid var(--border);
+}
+
+.CodeMirror-linenumber {
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.CodeMirror-cursor {
+    border-left: 1.5px solid var(--accent) !important;
+}
+
+.CodeMirror-selected {
+    background: rgba(146, 110, 57, 0.28) !important;
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+    background: rgba(146, 110, 57, 0.38) !important;
+}
+
+/* 匹配的括号高亮 */
+.CodeMirror-matchingbracket {
+    color: var(--accent-bright) !important;
+    background: rgba(146, 110, 57, 0.20);
+    border-radius: 2px;
+}
+
+.CodeMirror-nonmatchingbracket {
+    color: var(--c-rose) !important;
+}
+
+/* 行号当前行高亮 */
+.CodeMirror-activeline-background,
+.CodeMirror-activeline-gutter {
+    background: rgba(146, 110, 57, 0.08) !important;
+}
+
+
+/* ------------------------------------------------------------
+   19. 语法高亮 token 色板
+   ------------------------------------------------------------
+   CodeMirror 用 .cm-xxx 类标记每种 token。
+   设计原则：
+     - 关键字 / 原子 / 内建 → accent-bright（深棕 bold，UI 主强调）
+     - 字符串 / 数字 / 常量 → c-amber（赤金，数据型 token 同色）
+     - 函数 / 类型 / 属性访问 → c-blue（深海蓝，作用域型 token）
+     - 装饰器 / HTML 属性 → accent（暗金棕，修饰意味）
+     - 标签 / 错误 / 非法 → c-rose（纯红，警示）
+     - 注释 → text-muted + italic（最弱化）
+     - 运算符 / 括号 → text-secondary（次要文本色）
+     - 变量 → text-primary（与正文同色）
+
+   设计要点：accent 比 c-amber 更暗，是新色板的有意选择。
+     代码块里"字符串"比 UI"主强调"更显眼，因为代码阅读频率高
+     而 UI 元素靠位置和形状本身已足够引人注意。
+   ------------------------------------------------------------ */
+
+/* 关键字、原子、内建函数 */
+.cm-keyword,
+.cm-atom,
+.cm-builtin {
+    color: var(--accent-bright);
+    font-weight: 600;
+}
+
+/* 数字 / 字符串 / 常量 —— 数据型 token */
+.cm-number,
+.cm-string,
+.cm-string-2 {
+    color: var(--c-amber);
+}
+
+/* 类型、定义点（函数定义中的函数名、变量声明中的变量名） */
+.cm-type,
+.cm-def {
+    color: var(--c-blue);
+}
+
+/* 函数调用、属性访问、变量级别 2 / 3 */
+.cm-property,
+.cm-variable-2,
+.cm-variable-3,
+.cm-qualifier {
+    color: var(--c-blue);
+    font-weight: 600;
+}
+
+/* HTML / XML 标签 */
+.cm-tag {
+    color: var(--c-rose);
+}
+
+/* HTML 属性、装饰器：用 accent 体现"修饰" */
+.cm-attribute,
+.cm-meta {
+    color: var(--accent);
+}
+
+/* 括号 */
+.cm-bracket {
+    color: var(--text-secondary);
+}
+
+/* 注释，最弱化 */
+.cm-comment {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* 运算符 */
+.cm-operator {
+    color: var(--text-secondary);
+}
+
+/* 变量名（通用变量引用） */
+.cm-variable {
+    color: var(--text-primary);
+}
+
+/* 错误 / 非法 token */
+.cm-error {
+    color: var(--c-rose);
+    background: rgba(184, 35, 24, 0.10);
+    font-weight: 600;
+}
+
+/* 链接（在 markdown 代码块里的链接片段） */
+.cm-link {
+    color: var(--accent-bright);
+    text-decoration: underline;
+    text-decoration-color: rgba(146, 110, 57, 0.45);
+}
+
+.cm-url {
+    color: var(--text-muted);
+}
+
+/* Markdown 自身的代码块里：标题 / 引用 / 列表标记 */
+.cm-header {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.cm-quote {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.cm-hr {
+    color: var(--text-muted);
+}
+
+/* Diff / 补丁文件
+   diff 的 + 号沿用约定俗成的绿色 #5C8A6E */
+.cm-positive {
+    color: #5C8A6E;
+}
+
+.cm-negative {
+    color: var(--c-rose);
+}
+
+
+/* ============================================================
+   STEP 4 — Tables, HR, images, math, mark, footnotes, TOC
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   20. 表格
+   ------------------------------------------------------------ */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    padding: 0;
+    word-break: initial;
+    margin: 1em 0;
+}
+
+table tr {
+    border-top: 1px solid var(--border);
+    margin: 0;
+    padding: 0;
+    transition: background 0.15s ease;
+}
+
+/* 表头：bg-raised 底色 + 底部 2px accent 实线做"压重" */
+thead {
+    background-color: var(--bg-raised);
+}
+
+table th {
+    font-weight: 600;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-bottom: 2px solid var(--accent);
+    margin: 0;
+    padding: 8px 14px;
+    text-align: left;
+}
+
+table td {
+    border: 1px solid var(--border);
+    margin: 0;
+    padding: 8px 14px;
+    color: var(--text-primary);
+}
+
+/* 斑马纹：偶数行用极淡 accent 派生
+   accent 从亮橘换暗金棕后视觉偏弱，alpha 上调 0.05 → 0.06 */
+table tr:nth-child(2n) {
+    background-color: rgba(146, 110, 57, 0.06);
+}
+
+/* hover 加深一层 */
+table tbody tr:hover {
+    background-color: rgba(146, 110, 57, 0.12);
+}
+
+/* 表格内部行内代码：缩字号 */
+table code {
+    font-size: 0.85em;
+}
+
+/* 首行 / 末行单元格去掉多余 margin */
+table th:first-child,
+table td:first-child {
+    margin-top: 0;
+}
+
+table th:last-child,
+table td:last-child {
+    margin-bottom: 0;
+}
+
+
+/* ------------------------------------------------------------
+   21. 水平分割线
+   ------------------------------------------------------------
+   两端透明渐变到中间 accent，比硬边的 1px 线更有"翻页"质感
+   ------------------------------------------------------------ */
+hr {
+    height: 1px;
+    padding: 0;
+    margin: 2em 0;
+    background-color: transparent;
+    background-image: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--accent) 50%,
+        transparent 100%
+    );
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+
+/* ------------------------------------------------------------
+   22. 图片
+   ------------------------------------------------------------ */
+.md-image {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.md-image > img {
+    border-radius: 4px;
+    max-width: 100%;
+    box-shadow: 0 2px 8px rgba(57, 20, 10, 0.10);
+}
+
+/* 图片说明 / alt 元信息条 */
+.md-image > .md-meta {
+    border-radius: 3px;
+    padding: 2px 4px 0 4px;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* 块级图片居中 */
+p > .md-image:only-child {
+    display: block;
+    text-align: center;
+    margin: 1em auto;
+}
+
+
+/* ------------------------------------------------------------
+   23. 数学公式
+   ------------------------------------------------------------
+   行内公式：accent 派生淡底框，与正文分开但不喧宾夺主
+   块级公式：去掉底色，靠间距与居中突显
+   ------------------------------------------------------------ */
+.md-inline-math-container {
+    background: rgba(146, 110, 57, 0.12);
+    border-radius: 3px;
+    padding: 0 4px;
+}
+
+.md-math-block {
+    margin: 1.2em 0;
+    text-align: center;
+}
+
+/* 公式编辑态的辅助提示框 */
+.md-mathjax-midline {
+    background: var(--bg-raised);
+    border-radius: 3px;
+}
+
+/* MathJax 渲染出的公式文本继承正文色 */
+.MathJax,
+.MathJax_Display {
+    color: var(--text-primary) !important;
+}
+
+/* 公式块右下角的提示工具栏 */
+.mathjax-block > .code-tooltip {
+    bottom: 0.375rem;
+}
+
+/* 行内数学公式悬浮预览框 #math-inline-preview 共用 .code-tooltip 类，
+   样式已在第 16 节统一接管，此处无需重复定义。
+   脚注 popover 同理。 */
+
+/* 公式编辑态背景修复
+   Typora 给 .md-math-block 加 .md-rawblock-on-edit / .md-focus
+   两个 class 切到编辑态时，内置一个 #F5F6F7 浅灰底（在 maodie
+   色板里完全突兀）。这里强制改成 bg-raised 提亮奶茶，和代码
+   块、注释块、YAML 同档。
+   注入的 CodeMirror 实例可能自带独立默认底色，一并覆盖。 */
+.md-math-block.md-rawblock-on-edit,
+.md-math-block.md-focus {
+    background-color: var(--bg-raised) !important;
+}
+
+.md-math-block .CodeMirror,
+.md-math-block .CodeMirror-scroll,
+.md-math-block .CodeMirror-gutters {
+    background-color: var(--bg-raised) !important;
+    border: none !important;
+}
+
+/* rawblock 控件统一染色
+   .md-rawblock-control 是公用基类，三种实例都带它：
+     .md-rawblock-tooltip  顶部"公式 ✓"工具条
+     .md-rawblock-before   上方 $$ 包装
+     .md-rawblock-after    下方 $$ 包装
+   这些控件 hover 时浮现、编辑态常驻，Typora 默认 #F5F6F7 灰底
+   在 maodie 色板里突兀。统一改成 bg-raised 与公式编辑区同色。 */
+.md-rawblock-control {
+    background-color: var(--bg-raised) !important;
+    border: none !important;
+}
+
+/* hover 时公式渲染容器灰底修复
+   .md-rawblock-container 是 Typora 通用 class，多种 rawblock
+   类型共用，这里加 .md-math-block 父级限定，只覆盖数学公式
+   场景。hover 时 Typora 默认给 container 染 #F5F6F7 灰底，
+   改成奶茶色，与 control 工具条同色形成统一卡片。 */
+.md-math-block:hover .md-rawblock-container {
+    background-color: var(--bg-raised) !important;
+}
+
+
+/* ------------------------------------------------------------
+   24. Mark 高亮
+   ------------------------------------------------------------
+   用 c-amber 派生而非 accent 派生：
+   accent 暗金棕半透明叠加在奶油底上视觉偏灰，看不出"高亮"
+   c-amber 是清亮的赤金，半透明后形成"马克笔金黄"的视觉
+   ------------------------------------------------------------ */
+mark {
+    background: rgba(174, 120, 33, 0.35);
+    color: var(--text-primary);
+    border-radius: 2px;
+    padding: 0 3px;
+}
+
+
+/* ------------------------------------------------------------
+   25. 脚注
+   ------------------------------------------------------------ */
+/* 引用脚注的角标 [1] */
+.md-footnote {
+    color: var(--accent-bright);
+    background-color: transparent;
+    font-size: 0.85em;
+    padding: 0 2px;
+}
+
+.md-footnote:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--accent-bright);
+    text-underline-offset: 2px;
+}
+
+/* 脚注定义区域：靠 hr 同款渐变线做分隔
+   Typora 的脚注 DOM 是 .footnotes 容器 */
+.footnotes {
+    border-top: 0;
+    padding-top: 1em;
+    margin-top: 2em;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    position: relative;
+}
+
+.footnotes::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-image: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--accent) 50%,
+        transparent 100%
+    );
+}
+
+
+/* ------------------------------------------------------------
+   26. 目录 TOC
+   ------------------------------------------------------------
+   TOC 容器走 bg-raised + 边框 + 圆角，像一张"嵌入式书签卡"
+   层级颜色按 H1/H2 主色 → H3 副色 → H4-6 弱化色 递减
+
+   左侧装饰条采用 ::before 覆盖层方案：1px 全边框走完一圈，
+   ::before 浮在边框之上覆盖左侧 1px 边框 + 露出 4px 装饰净宽。
+   原因是 border-left:3px + border:1px 在左上左下会有 miter
+   45° 斜接，肉眼形成轻微梯形。
+   ------------------------------------------------------------ */
+.md-toc {
+    position: relative;
+    background-color: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 0 4px 4px 0;
+    padding: 1em 1.5em;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+}
+
+.md-toc::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    width: 4px;
+    background: var(--accent);
+    pointer-events: none;
+}
+
+.md-toc-content {
+    padding-left: 0;
+}
+
+.md-toc-item {
+    list-style: none;
+    margin: 0.2em 0;
+}
+
+.md-toc-h1 > .md-toc-inner {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.md-toc-h2 > .md-toc-inner {
+    color: var(--text-primary);
+}
+
+.md-toc-h3 > .md-toc-inner {
+    color: var(--text-secondary);
+}
+
+.md-toc-h4 > .md-toc-inner,
+.md-toc-h5 > .md-toc-inner,
+.md-toc-h6 > .md-toc-inner {
+    color: var(--text-muted);
+}
+
+.md-toc-inner {
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.md-toc-inner:hover {
+    color: var(--accent-bright);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-bright);
+    text-underline-offset: 2px;
+}
+
+
+/* ============================================================
+   STEP 5 — Sidebar, menus, dialogs, status bar, preferences
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   27. 侧栏容器
+   ------------------------------------------------------------ */
+#typora-sidebar {
+    background-color: var(--bg-deep);
+    border-right: 1px solid var(--border);
+    box-shadow: none;
+    font-family: var(--font-ui);
+    font-size: 0.92em;
+    color: var(--text-secondary);
+}
+
+.mac-seamless-mode #typora-sidebar {
+    background-color: var(--bg-deep);
+}
+
+/* 侧栏顶部按钮（折叠 / 刷新 / 切换视图等） */
+.sidebar-content-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.sidebar-content-header-toggle {
+    color: var(--text-muted);
+}
+
+.sidebar-content-header-toggle:hover {
+    color: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   28. 耄耋骑车动画（侧栏底部）
+   ------------------------------------------------------------
+   40x40 扣图 GIF，沿侧栏底部循环骑行。GIF 素材朝左骑，
+   故主动画起点设在右端、scaleX(1) 对应"向左移动"阶段。
+
+   ▸ drop-shadow filter 给猫加一层暖棕调阴影，体现立体感
+   ▸ hover 暂停动画，便于鼠标停留时观察细节
+   ▸ :active 触发跳跃。纯 CSS 受限：:active 在抬起瞬间撤销
+     动画，因此短按只看得到部分跳跃，长按可看到完整一次。
+     持久化的"一次完整跳跃"需要 JS 配合，此处不启用。
+   ▸ 端点翻转用关键帧 49.99% / 50% 的瞬时切换，再配合
+     step-end 时序函数彻底消除中间帧插值，杜绝"翻转扭曲"。
+   ------------------------------------------------------------ */
+#typora-sidebar {
+    position: relative;
+    overflow: hidden;
+}
+
+#typora-sidebar::before {
+    content: "";
+    position: absolute;
+    bottom: 36px;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    background-image: url("./maodie/cat.gif");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    filter: drop-shadow(0 4px 3px rgba(57, 20, 10, 0.30));
+    animation: cat-ride 16s linear infinite;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 5;
+}
+
+/* hover 触发暂停效果，便于鼠标停留时观察细节 */
+#typora-sidebar::before:hover {
+    animation-play-state: paused;
+}
+
+/* 点击瞬间触发跳跃：通过侧栏 :active 状态。
+   纯 CSS 受限：:active 在抬起瞬间撤销动画，
+   因此短按只看得到部分跳跃，长按可看到完整一次。
+   持久化的"一次完整跳跃"需要 JS 配合（此处不启用）。 */
+#typora-sidebar:active::before {
+    animation-name: cat-jump, cat-ride;
+    animation-duration: 0.4s, 16s;
+    animation-timing-function: ease-out, linear;
+    animation-iteration-count: 1, infinite;
+    animation-delay: 0s, 0s;
+}
+
+/* 主动画：朝左为自然方向（scaleX:1），到左端瞬时翻转继续向右 */
+@keyframes cat-ride {
+    0% {
+        left: calc(100% - 40px);
+        transform: scaleX(1);
+    }
+    49.99% {
+        left: 0;
+        transform: scaleX(1);
+        animation-timing-function: step-end;
+    }
+    50% {
+        left: 0;
+        transform: scaleX(-1);
+    }
+    99.99% {
+        left: calc(100% - 40px);
+        transform: scaleX(-1);
+        animation-timing-function: step-end;
+    }
+    100% {
+        left: calc(100% - 40px);
+        transform: scaleX(1);
+    }
+}
+
+/* 跳跃动画：用 translate 不用 transform，避免与 scaleX 互相覆盖 */
+@keyframes cat-jump {
+    0%   { translate: 0 0; }
+    40%  { translate: 0 -18px; }
+    70%  { translate: 0 -6px; }
+    100% { translate: 0 0; }
+}
+
+
+/* ------------------------------------------------------------
+   29. 侧栏标签栏
+   ------------------------------------------------------------
+   底部不要硬边线，激活标签下方用 2px 主强调线做指示
+   ------------------------------------------------------------ */
+.sidebar-tabs {
+    background-color: transparent;
+}
+
+.sidebar-tab {
+    color: var(--text-muted);
+    background: transparent;
+    transition: color 0.15s ease;
+}
+
+.sidebar-tab:hover {
+    color: var(--text-primary);
+}
+
+.sidebar-tab.active {
+    color: var(--text-primary);
+    background: transparent;
+    position: relative;
+}
+
+.sidebar-tab.active::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 2px;
+    background: var(--accent-bright);
+    border-radius: 1px;
+}
+
+
+/* ------------------------------------------------------------
+   30. 文件树
+   ------------------------------------------------------------ */
+.file-list-item,
+.file-tree-node {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: none;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.file-list-item:hover,
+.file-tree-node:hover,
+.file-node-content:hover {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+/* 当前激活的文件 */
+.file-list-item.active,
+.file-tree-node.active,
+.file-list-item-file-name.active {
+    background-color: rgba(146, 110, 57, 0.22);
+    color: var(--text-primary);
+    position: relative;
+}
+
+.file-list-item.active::before,
+.file-tree-node.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent-bright);
+}
+
+/* 文件 / 文件夹图标 */
+.file-node-icon,
+.file-node-open-state {
+    color: var(--text-muted);
+}
+
+.file-node-content:hover .file-node-icon,
+.file-node-content:hover .file-node-open-state {
+    visibility: visible;
+    color: var(--accent);
+}
+
+/* 文件路径标签 */
+.file-list-item-summary {
+    color: var(--text-muted);
+    font-size: 0.85em;
+}
+
+
+/* ------------------------------------------------------------
+   31. 大纲
+   ------------------------------------------------------------ */
+.outline-item {
+    color: var(--text-secondary);
+    background-color: transparent;
+    border: none;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.outline-item:hover {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+.outline-item.active,
+.outline-active {
+    color: var(--text-primary);
+    background-color: rgba(146, 110, 57, 0.22);
+    position: relative;
+}
+
+.outline-item.active::before,
+.outline-active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent-bright);
+}
+
+.outline-expander {
+    color: var(--text-muted);
+}
+
+
+/* ------------------------------------------------------------
+   32. 顶部菜单 / megamenu
+   ------------------------------------------------------------ */
+header,
+.context-menu,
+.megamenu-content,
+footer {
+    font-family: var(--font-ui);
+}
+
+.megamenu-content {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+.megamenu-menu {
+    background-color: var(--bg-deep);
+    border-right: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.megamenu-menu-list li a {
+    color: var(--text-secondary);
+}
+
+.megamenu-menu-list li a:hover,
+.megamenu-menu-list li.active a {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+.megamenu-menu-header {
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+}
+
+/* 菜单内按钮样式 */
+.menu-item-container a.menu-style-btn {
+    background-color: var(--bg-raised);
+    background-image: none;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.menu-item-container a.menu-style-btn:hover {
+    background-color: var(--bg-deep);
+    border-color: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   33. 右键菜单
+   ------------------------------------------------------------ */
+.context-menu,
+#context-menu {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgba(57, 20, 10, 0.15);
+    padding: 6px 0;
+    color: var(--text-primary);
+}
+
+.context-menu .menu-item,
+#context-menu li > a {
+    color: var(--text-primary);
+    background: transparent;
+    padding: 6px 16px;
+    transition: background 0.12s ease;
+}
+
+.context-menu .menu-item:hover,
+#context-menu li > a:hover,
+.context-menu li.focused > a {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+/* 禁用项 */
+.context-menu .menu-item.disabled,
+#context-menu li.disabled > a {
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+/* 子菜单箭头颜色 */
+.context-menu .submenu-arrow,
+#context-menu .submenu-indicator {
+    color: var(--text-muted);
+}
+
+
+/* ------------------------------------------------------------
+   34. Dropdown 菜单与分隔符
+   ------------------------------------------------------------ */
+.dropdown-menu {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgba(57, 20, 10, 0.15);
+    color: var(--text-primary);
+}
+
+.dropdown-menu > li > a {
+    color: var(--text-primary);
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-menu > .active > a {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+.dropdown-menu .divider {
+    background-color: var(--border);
+    border-color: var(--border);
+    opacity: 0.6;
+}
+
+
+/* ------------------------------------------------------------
+   35. Quick Open 对话框
+   ------------------------------------------------------------ */
+#typora-quick-open {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(57, 20, 10, 0.18);
+}
+
+#typora-quick-open input,
+#typora-quick-open-input input {
+    background-color: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 4px;
+}
+
+#typora-quick-open input:focus,
+#typora-quick-open-input input:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.typora-quick-open-item,
+#typora-quick-open-item {
+    background-color: transparent;
+    border-color: var(--border);
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    color: var(--text-primary);
+}
+
+.typora-quick-open-item:hover,
+.typora-quick-open-item.active,
+#typora-quick-open-item.active {
+    background-color: var(--bg-raised);
+}
+
+
+/* ------------------------------------------------------------
+   36. 状态栏 / footer
+   ------------------------------------------------------------ */
+footer {
+    background-color: var(--bg-deep);
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    font-size: 0.8em;
+}
+
+#footer-word-count {
+    color: var(--text-muted);
+    background-color: transparent;
+}
+
+#footer-word-count:hover {
+    color: var(--text-primary);
+}
+
+#footer-word-count-info {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(57, 20, 10, 0.12);
+    color: var(--text-primary);
+}
+
+
+/* ------------------------------------------------------------
+   37. 偏好设置面板
+   ------------------------------------------------------------ */
+.ty-preferences {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+}
+
+.ty-preferences .window-content {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* 左侧导航 */
+.ty-preferences .nav-group-item {
+    color: var(--text-secondary);
+    background-color: transparent;
+}
+
+.ty-preferences .nav-group-item:hover {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+.ty-preferences .nav-group-item.active {
+    color: #FFFFFF;
+    background-color: var(--accent);
+}
+
+/* 右侧表单容器 */
+.ty-preferences .preference-group {
+    background-color: var(--bg-main);
+}
+
+.ty-preferences input[type="text"],
+.ty-preferences input[type="number"],
+.ty-preferences input[type="search"],
+.ty-preferences select,
+.ty-preferences textarea {
+    background-color: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 4px;
+}
+
+.ty-preferences input[type="text"]:focus,
+.ty-preferences input[type="number"]:focus,
+.ty-preferences input[type="search"]:focus,
+.ty-preferences select:focus,
+.ty-preferences textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+/* 章节小标题 */
+.ty-preferences .preference-group h2,
+.ty-preferences .preference-group h3 {
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+}
+
+
+/* ------------------------------------------------------------
+   38. 按钮
+   ------------------------------------------------------------ */
+button,
+.btn {
+    font-family: var(--font-ui);
+}
+
+button.btn-default,
+.btn.btn-default {
+    background-color: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+button.btn-default:hover,
+.btn.btn-default:hover {
+    background-color: var(--bg-deep);
+    border-color: var(--accent);
+}
+
+button.btn-primary,
+.btn.btn-primary {
+    background-color: var(--accent);
+    border: 1px solid var(--accent);
+    color: #FFFFFF;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+button.btn-primary:hover,
+.btn.btn-primary:hover {
+    background-color: var(--accent-bright);
+    border-color: var(--accent-bright);
+}
+
+
+/* ------------------------------------------------------------
+   39. 通知 / 提示条
+   ------------------------------------------------------------ */
+#md-notification {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgba(57, 20, 10, 0.15);
+    color: var(--text-primary);
+}
+
+#md-notification .btn {
+    border: 0;
+    background-color: transparent;
+    color: var(--accent-bright);
+}
+
+#md-notification .btn:hover {
+    color: var(--accent);
+    background-color: var(--bg-raised);
+}
+
+#md-notification .close {
+    color: var(--text-muted);
+}
+
+#md-notification .close:hover {
+    color: var(--text-primary);
+}
+
+
+/* ------------------------------------------------------------
+   40. 原生表单控件的强调色
+   ------------------------------------------------------------
+   用 CSS 现代属性 accent-color 一次性接管所有原生控件的
+   主强调色：checkbox / radio / progress / range 等。
+   Typora 的 Electron 内核已支持。
+   ------------------------------------------------------------ */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+progress {
+    accent-color: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   41. macOS 原生光标兜底
+   ------------------------------------------------------------ */
+.mac-os #write {
+    caret-color: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   42. Modal 对话框（含未保存关闭时的"是否保存"询问框）
+   ------------------------------------------------------------
+   Bootstrap 模态对话框的结构：
+     .modal           ← 全屏遮罩层
+       .modal-dialog  ← 外层包装，仅做定位和宽度约束
+         .modal-content ← 真正显示卡片样式的容器
+
+   一个常见的实现误区：把卡片样式同时挂在
+   .modal-dialog 和 .modal-content 上，导致外层包装显式
+   带上了背景色，在窄内容外侧出现一圈"幽灵宽框"。
+
+   正确做法：外层 .modal-dialog 强制完全透明，
+   仅 .modal-content 承担所有卡片视觉。
+   ------------------------------------------------------------ */
+
+/* 外层包装：彻底隐形 */
+.modal-dialog {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+/* 内层卡片：所有视觉都挂这里 */
+.modal-content {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 12px 32px rgba(57, 20, 10, 0.18);
+    color: var(--text-primary);
+}
+
+.modal-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+}
+
+.modal-title {
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    font-weight: 600;
+}
+
+.modal-body {
+    color: var(--text-primary);
+    background-color: transparent;
+}
+
+.modal-footer {
+    background-color: transparent;
+    border-top: 1px solid var(--border);
+}
+
+/* 关闭按钮 × */
+.modal-header .close {
+    color: var(--text-muted);
+    text-shadow: none;
+    opacity: 1;
+    transition: color 0.12s ease;
+}
+
+.modal-header .close:hover {
+    color: var(--text-primary);
+}
+
+/* 模态遮罩层 */
+.modal-backdrop {
+    background-color: var(--text-primary);
+}
+
+.modal-backdrop.in {
+    opacity: 0.35;
+}
+
+
+/* ------------------------------------------------------------
+   43. 跑步耄耋 · 滚动条跟随者
+   ------------------------------------------------------------
+   实现策略：让主文档滚动条的 thumb 承载一只 40x40 跑步 GIF。
+   原生 thumb 位置由浏览器与滚动位置绑定，我们什么都不用做，
+   猫就随滚动上下移动。
+
+   ▸ 注意 Typora 1.13 的主滚动容器不一定是 html。
+     不同版本可能用 body、content、#write-style、#write
+     之一作为实际滚动元素。这里把所有候选都列出来，
+     哪个匹配中实际滚动容器，猫就长在哪。没匹配中的
+     选择器对页面无任何副作用。
+
+   ▸ 第 6 节的裸 ::-webkit-scrollbar { width: 8px } 仍然
+     对所有未被这里命中的次要滚动条生效（侧栏、模态等）。
+
+   ▸ 局限：GIF 不能被 CSS 暂停。猫永远在"原地跑"，但
+     position 会跟着 thumb 移动。即"边跑边移动"。
+
+   ▸ background-size 与 thumb 宽度均为 40px，猫占满 thumb
+     整个宽度。再放大会被 thumb 边界裁切猫脸。
+   ------------------------------------------------------------ */
+
+body::-webkit-scrollbar,
+content::-webkit-scrollbar,
+#write-style::-webkit-scrollbar,
+#write::-webkit-scrollbar {
+    width: 40px;
+}
+
+body::-webkit-scrollbar-track,
+content::-webkit-scrollbar-track,
+#write-style::-webkit-scrollbar-track,
+#write::-webkit-scrollbar-track {
+    background: transparent;
+    border: none;
+}
+
+body::-webkit-scrollbar-thumb,
+content::-webkit-scrollbar-thumb,
+#write-style::-webkit-scrollbar-thumb,
+#write::-webkit-scrollbar-thumb {
+    background: url("./maodie/run.gif") center / 40px 40px no-repeat,
+                transparent;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 56px;
+}
+
+/* hover / active 时保持纯透明，让猫"始终漂浮"无矩形高亮
+   thumb 本身仍然存在响应拖动，只是肉眼不可见 */
+body::-webkit-scrollbar-thumb:hover,
+content::-webkit-scrollbar-thumb:hover,
+#write-style::-webkit-scrollbar-thumb:hover,
+#write::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:active,
+content::-webkit-scrollbar-thumb:active,
+#write-style::-webkit-scrollbar-thumb:active,
+#write::-webkit-scrollbar-thumb:active {
+    background: url("./maodie/run.gif") center / 40px 40px no-repeat,
+                transparent;
+}
+
+
+/* ============================================================
+   STEP 6 — Final polish
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   44. 查找 / 替换栏
+   ------------------------------------------------------------ */
+.ty-search-bar,
+#md-searchpanel {
+    background-color: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(57, 20, 10, 0.15);
+    color: var(--text-primary);
+}
+
+.ty-search-bar input,
+#md-searchpanel input {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 4px;
+}
+
+.ty-search-bar input:focus,
+#md-searchpanel input:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+/* 命中项高亮：用 c-amber 派生与 mark 同款，
+   都属于"金黄马克笔"语义 */
+.md-search-hit {
+    background-color: rgba(174, 120, 33, 0.30);
+    color: var(--text-primary);
+    border-radius: 2px;
+}
+
+/* 当前焦点命中 */
+.md-search-hit.md-search-select-hit,
+.md-search-hit-current {
+    background-color: var(--accent);
+    color: #FFFFFF;
+}
+
+/* 查找栏按钮 */
+.ty-search-bar button,
+#md-searchpanel button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    border-radius: 3px;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.ty-search-bar button:hover,
+#md-searchpanel button:hover {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+
+/* ------------------------------------------------------------
+   45. 源码模式
+   ------------------------------------------------------------
+   View → Toggle Source Code Mode 进入的全文档源码视图。
+   CodeMirror 基础配色已在第 18 节做过，这里补全容器层。
+   ------------------------------------------------------------ */
+#typora-source {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+}
+
+#typora-source .CodeMirror {
+    background: var(--bg-main) !important;
+    color: var(--text-primary);
+}
+
+#typora-source .CodeMirror-gutters {
+    background: var(--bg-deep) !important;
+    border-right: 1px solid var(--border);
+}
+
+#typora-source .CodeMirror-linenumber {
+    color: var(--text-muted);
+}
+
+
+/* ------------------------------------------------------------
+   46. HTML 导出兼容
+   ------------------------------------------------------------
+   导出 HTML 时 Typora 会把 #write 包在 .typora-export 容器里，
+   :root 变量也会一并写入。这里仅做导出场景下的微调。
+   ------------------------------------------------------------ */
+.typora-export {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+}
+
+.typora-export #write {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* 导出场景下隐藏编辑态才有的指示器 */
+.typora-export .md-tag,
+.typora-export .md-meta {
+    display: none;
+}
+
+/* 导出时代码块装饰条仍然显示，重新声明位置上下文 */
+.typora-export .md-fences {
+    position: relative;
+}
+
+/* 打印导出时的标题分隔线 */
+@media print {
+    .typora-export h1,
+    .typora-export h2 {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0.3em;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   47. Tooltip 工具提示
+   ------------------------------------------------------------ */
+.tooltip,
+#info-panel-tab-info,
+.ty-tooltip {
+    background-color: var(--bg-deep) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(57, 20, 10, 0.15);
+    font-family: var(--font-ui);
+    font-size: 0.85em;
+}
+
+.tooltip .tooltip-arrow,
+.tooltip-arrow {
+    border-color: var(--border) !important;
+}
+
+.tooltip .tooltip-inner {
+    background-color: transparent;
+    color: var(--text-primary);
+}
+
+
+/* ------------------------------------------------------------
+   48. 自动补全 / 建议下拉
+   ------------------------------------------------------------ */
+.auto-suggest-container,
+.auto-complete-container,
+.ty-quick-suggestions {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(57, 20, 10, 0.15);
+    color: var(--text-primary);
+}
+
+.auto-suggest-container li,
+.auto-complete-container li {
+    color: var(--text-secondary);
+    background-color: transparent;
+}
+
+.auto-suggest-container li:hover,
+.auto-suggest-container li.active,
+.auto-complete-container li:hover,
+.auto-complete-container li.active {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+}
+
+
+/* ------------------------------------------------------------
+   49. GitHub 风格警告框 callouts
+   ------------------------------------------------------------
+   Typora 渲染 GitHub 警报框时给 blockquote 加 .md-callout 类
+   与 type 子类。五种类型用五种功能色，加 tip 借用 cm-positive
+   暗绿，恰好对应 GitHub 默认 callout 的绿色 tip 约定。
+   ------------------------------------------------------------ */
+blockquote.md-callout {
+    border-left: 4px solid var(--accent);
+    background: rgba(146, 110, 57, 0.08);
+    padding: 0.8em 1.2em;
+    border-radius: 0 4px 4px 0;
+}
+
+blockquote.md-callout .md-callout-title,
+blockquote.md-callout > p:first-child {
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 0.4em;
+}
+
+/* note: 蓝 */
+blockquote.md-callout.md-callout-note {
+    border-left-color: var(--c-blue);
+    background: rgba(42, 84, 130, 0.07);
+}
+
+/* tip: 暗绿，对应 GitHub 默认 tip 的绿色约定 */
+blockquote.md-callout.md-callout-tip {
+    border-left-color: #5C8A6E;
+    background: rgba(92, 138, 110, 0.08);
+}
+
+/* important: 深棕（accent-bright），最重磅的视觉权重 */
+blockquote.md-callout.md-callout-important {
+    border-left-color: var(--accent-bright);
+    background: rgba(110, 78, 32, 0.08);
+}
+
+/* warning: 赤金（c-amber） */
+blockquote.md-callout.md-callout-warning {
+    border-left-color: var(--c-amber);
+    background: rgba(174, 120, 33, 0.08);
+}
+
+/* caution: 纯红（c-rose），警示 */
+blockquote.md-callout.md-callout-caution {
+    border-left-color: var(--c-rose);
+    background: rgba(184, 35, 24, 0.07);
+}
+
+/* callout 标题与图标颜色与边框同步 */
+blockquote.md-callout.md-callout-note .md-callout-icon,
+blockquote.md-callout.md-callout-note .md-callout-title { color: var(--c-blue); }
+blockquote.md-callout.md-callout-tip .md-callout-icon,
+blockquote.md-callout.md-callout-tip .md-callout-title { color: #5C8A6E; }
+blockquote.md-callout.md-callout-important .md-callout-icon,
+blockquote.md-callout.md-callout-important .md-callout-title { color: var(--accent-bright); }
+blockquote.md-callout.md-callout-warning .md-callout-icon,
+blockquote.md-callout.md-callout-warning .md-callout-title { color: var(--c-amber); }
+blockquote.md-callout.md-callout-caution .md-callout-icon,
+blockquote.md-callout.md-callout-caution .md-callout-title { color: var(--c-rose); }
+
+
+/* ------------------------------------------------------------
+   50. Mermaid / 图表块容器
+   ------------------------------------------------------------
+   Mermaid 自带主题，这里仅做容器外观与编辑态包装的颜色配合。
+
+   关键诊断：mermaid 的 .md-fences 内同时存在两个子元素：
+   .CodeMirror 源码编辑器 + .md-diagram-panel 渲染面板。
+   Typora 内置给 .CodeMirror-sizer 设了 min-height: 135px
+   inline style，即使视觉上不显示，CodeMirror 仍撑开 135px+
+   的高度，导致外层 .md-fences border 矩形远大于实际 SVG
+   渲染区域，看起来 border 框很大但 SVG 缩在内、周围一片空白。
+
+   修法：在 .md-diagram 标记下把 .CodeMirror 整个高度压 0，
+   让 .md-fences 高度完全由 .md-diagram-panel 决定。
+   ------------------------------------------------------------ */
+.md-diagram-panel,
+.md-fences[lang^="mermaid"],
+.md-fences[lang="sequence"],
+.md-fences[lang="flow"] {
+    background-color: var(--bg-raised);
+    border-radius: 0 4px 4px 0;
+}
+
+/* Mermaid 左侧装饰条单独收紧：从继承自 .md-fences::before 的
+   top: -1px / bottom: -1px 改为 top: 0 / bottom: 0，
+   让左条不再上下溢出 1px 盖 border，收齐在 .md-fences 框内。
+   原因：Mermaid 块内层还有 .md-diagram-panel-preview 自带的
+   1px 边框 + 4px 圆角，外层左条若再溢出去就会与内层边框
+   在视觉上叠出"双层棕条"的杂边。 */
+.md-fences[lang^="mermaid"]::before,
+.md-fences[lang="sequence"]::before,
+.md-fences[lang="flow"]::before {
+    top: 0;
+    bottom: 0;
+}
+
+/* 渲染态下，CodeMirror 源码编辑器在 .md-fences 内仍占 135px+ 高度
+   压成 0 让 .md-fences 容器紧贴 .md-diagram-panel。
+   :not(.md-focus) 限定只在非编辑态压制，点入编辑态时 Typora 给
+   .md-fences 加 .md-focus，规则自动失效，CodeMirror 恢复显示。 */
+.md-fences.md-diagram:not(.md-focus) > .CodeMirror {
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+.md-fences.md-diagram:not(.md-focus) .CodeMirror-sizer,
+.md-fences.md-diagram:not(.md-focus) .CodeMirror-scroll {
+    min-height: 0 !important;
+    height: 0 !important;
+}
+
+/* 渲染图容器：贴边 + 内层 preview 作为 SVG 视觉边界 */
+.md-diagram-panel {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.md-diagram-panel-preview {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1em;
+    margin: 0;
+}
+
+.md-diagram-panel-error {
+    color: var(--c-rose);
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+}
+
+
+/* ------------------------------------------------------------
+   51. HTML 注释块
+   ------------------------------------------------------------
+   Markdown 里 <!-- ... --> 的注释 Typora 用 .md-htmlblock 渲染
+   ------------------------------------------------------------ */
+.md-htmlblock {
+    background-color: var(--bg-raised);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--text-muted);
+    border-radius: 0 4px 4px 0;
+    padding: 8px 12px;
+    margin: 0.8em 0;
+}
+
+.md-htmlblock-container {
+    color: var(--text-muted);
+}
+
+
+/* ------------------------------------------------------------
+   52. 拼写检查下划线
+   ------------------------------------------------------------ */
+.md-spell-error {
+    text-decoration: underline wavy var(--c-rose);
+    text-underline-offset: 3px;
+}
+
+
+/* ------------------------------------------------------------
+   53. 边缘 hover 与焦点态兜底
+   ------------------------------------------------------------
+   覆盖 Typora 内部按钮、操作图标在 hover 时残留的蓝色描边
+   或浅灰底等边缘情况。
+   ------------------------------------------------------------ */
+*:focus {
+    outline-color: var(--accent);
+}
+
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus {
+    outline: none;
+}
+
+/* 文档左下角的图标按钮（大纲切换、源码模式、字数统计） */
+#footer-info,
+.footer-item,
+.ty-footer-icon {
+    color: var(--text-muted);
+    background: transparent;
+    border-radius: 3px;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+#footer-info:hover,
+.footer-item:hover,
+.ty-footer-icon:hover,
+.ty-footer-icon.active {
+    color: var(--accent);
+    background-color: rgba(146, 110, 57, 0.12);
+}
+
+/* 段落悬浮显示的代码语言输入框 */
+.ty-cm-lang-input {
+    background-color: var(--bg-raised);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+}
+
+
+/* ------------------------------------------------------------
+   54. 折叠箭头
+   ------------------------------------------------------------ */
+.md-toc-cont .md-toc-h1 > .md-toc-inner::before,
+.md-fold-icon {
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+}
+
+.md-fold-icon:hover {
+    color: var(--accent);
+}
+
+
+/* ------------------------------------------------------------
+   55. 段落锚点（标题悬停时显示的链式图标）
+   ------------------------------------------------------------ */
+.md-heading-anchor {
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+h1:hover .md-heading-anchor,
+h2:hover .md-heading-anchor,
+h3:hover .md-heading-anchor,
+h4:hover .md-heading-anchor,
+h5:hover .md-heading-anchor,
+h6:hover .md-heading-anchor {
+    opacity: 0.6;
+}
+
+.md-heading-anchor:hover {
+    color: var(--accent);
+    opacity: 1 !important;
+}
+
+
+/* ============================================================
+   END OF FILE — Maodie theme is complete.
+   两只耄耋：侧栏底部骑车 + 滚动条上跑步。
+   ============================================================ */
