@@ -203,25 +203,48 @@ ol:last-child  { margin-bottom: 0; }
 
 /* ------------------------------------------------------------
    7. 打印兜底
+   ------------------------------------------------------------
+   分两套行为：
+   1) PDF 导出 / 屏幕预览（@media print，未带 body.print）
+      保留 var(--bg-main) 米色纸张观感，避免正文边缘
+      出现 #FFFFFF 白条与米底打架。Chromium / Webkit 默认
+      会把 background-color 视作"省墨优化"丢弃，必须显式
+      声明 -webkit-print-color-adjust: exact 才能让导出的
+      PDF 真正带上底色。
+   2) 物理打印（body.print，Typora 真正走打印机时挂上）
+      切回白底黑字，避免每张纸喷一层米色浪费墨水。
    ------------------------------------------------------------ */
 @media print {
+    html, body, #write,
+    .typora-export,
+    .typora-export-content {
+        background-color: var(--bg-main);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
     html {
         font-size: 13px;
-        background-color: #ffffff;
-    }
-    body {
-        color: #000000;
-        background-color: #ffffff;
     }
     #write {
-        background-color: #ffffff;
-        color: #000000;
+        color: var(--text-primary);
         max-width: 100%;
         padding: 0;
     }
     pre {
         page-break-inside: avoid;
         word-wrap: break-word;
+    }
+}
+
+/* 真物理打印时切回白底黑字，省墨且观感正常 */
+@media print {
+    body.print,
+    body.print html,
+    body.print #write,
+    body.print .typora-export,
+    body.print .typora-export-content {
+        background-color: #FFFFFF;
+        color: #000000;
     }
 }
 
