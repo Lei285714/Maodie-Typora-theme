@@ -8,7 +8,10 @@
      ├── maodie.css              ← 本文件
      └── maodie/
          ├── fonts/
-         │   └── c66fc489e-C-BHYa_K.woff2   (Anthropic Serif)
+         │   ├── newsreader.woff2          (Newsreader 正体, OFL-1.1,
+         │   │                              Production Type / Google Fonts)
+         │   ├── newsreader-italic.woff2   (Newsreader 斜体, 同上)
+         │   └── OFL.txt                   (字体许可证，分发时随附)
          ├── cat.gif             ← 侧栏底部骑车耄耋（40x40 朝左）
          ├── run.gif             ← 主滚动条上跑步耄耋（40x40，附在 thumb 上）
          ├── face-1.png          ← 无序列表 L1 marker（64x64 圆形扣图，20px 显示）
@@ -28,12 +31,45 @@
 
 /* ------------------------------------------------------------
    1. 字体声明
+   ------------------------------------------------------------
+   西文字体策略（三级回退，名实相符、license 干净）：
+     1) "Anthropic Serif" —— 仅当用户本机自行安装了正版时才命中，
+        主题包不内嵌它（它是 Anthropic 商用定制字体，无权再分发）。如果你通过某些手段得到了此字体（抓包），或是想自定义字体，请按本部分最后的提示操作
+     2) "Newsreader" —— 主题内嵌的开源替身，下方 @font-face 声明。
+        Production Type 出品，SIL Open Font License v1.1，
+        允许自由内嵌、再分发、商用。气质接近：人文衬线、
+        x 高度偏高、温润有书卷气，可变字重 200–800 且含真斜体。
+        正体与斜体分两段声明、共用同名 "Newsreader"，靠
+        font-style 区分：正文走 normal，em / *斜体* 走 italic，
+        浏览器自动切到斜体段，得到真斜体字形而非算法伪斜。
+     3) Georgia 及系统衬线 —— 最终兜底。
+
+   内嵌文件（放入 ./maodie/fonts/）：
+     newsreader.woff2          ← 正体  (Newsreader-VariableFont_opsz,wght)
+     newsreader-italic.woff2   ← 斜体  (Newsreader-Italic-VariableFont_opsz,wght)
+    附带的许可证是 OFL 协议的合规要求。
+
+   ── 想换成自己喜欢的字体？──
+     a. 把字体的 .woff2 放进 ./maodie/fonts/ 目录；
+     b. 改下方 @font-face 的 font-family 名与 src 路径，
+        再到 :root 的 --font-body / --font-ui 字体栈里
+        把 "Newsreader" 替换成你的字体名即可。若新字体没有
+        独立斜体文件，删掉下方第二段 italic 声明，斜体会回退
+        到浏览器算法伪斜。
    ------------------------------------------------------------ */
 @font-face {
-    font-family: "Anthropic Serif";
-    src: url("./maodie/fonts/c66fc489e-C-BHYa_K.woff2") format("woff2");
-    font-weight: 300 800;
+    font-family: "Newsreader";
+    src: url("./maodie/fonts/newsreader.woff2") format("woff2");
+    font-weight: 200 800;
     font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Newsreader";
+    src: url("./maodie/fonts/newsreader-italic.woff2") format("woff2");
+    font-weight: 200 800;
+    font-style: italic;
     font-display: swap;
 }
 
@@ -83,10 +119,10 @@
     --monospace:                var(--font-mono);
 
     /* —— 字体栈 —— */
-    --font-body: "Anthropic Serif", Georgia, "Times New Roman",
+    --font-body: "Anthropic Serif", "Newsreader", Georgia, "Times New Roman",
                  "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC",
                  "PingFang SC", "Hiragino Sans GB", serif;
-    --font-ui:   "Anthropic Serif", Georgia,
+    --font-ui:   "Anthropic Serif", "Newsreader", Georgia,
                  "Songti SC", "PingFang SC", "Hiragino Sans GB",
                  "Noto Sans CJK SC", "Source Han Sans SC",
                  "Microsoft YaHei", "Segoe UI", sans-serif;
@@ -473,7 +509,7 @@ a:visited {
    10. 行内强调
    ------------------------------------------------------------
    粗体加字重 + 切到 accent-bright 做"声调上扬"
-   斜体只依赖 Anthropic Serif 的真斜体字形
+   斜体只依赖正文衬线的真斜体字形（Newsreader 等均含真斜体）
    md-tag 是 Typora 包裹 **、_、# 等语法符号的元素，弱化它
    ------------------------------------------------------------ */
 strong {
