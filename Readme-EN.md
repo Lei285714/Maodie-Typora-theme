@@ -41,9 +41,11 @@ Restart Typora, then go to **Menu Bar → Themes → maodie**. Effective immedia
 ```
 themes/
 ├── maodie.css                  main stylesheet, ~2600 lines, 55 sections
-└── maodie/
+└── maodie/ 
     ├── fonts/
-    │   └── c66fc489e-C-BHYa_K.woff2    embedded font
+    │   ├── newsreader.woff2
+    |	├── newsreader-italic.woff2 embedded font
+    |	└── OFL.txt
     ├── cat.gif                 biking Maodie
     ├── run.gif                 running Maodie
     ├── face-1.png ~ face-5.png list level markers

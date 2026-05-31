@@ -35,16 +35,18 @@ Project structure:
      themes/
      ├── maodie.css              ← this file
      └── maodie/
-         ├── fonts/
-         │   └── c66fc489e-C-BHYa_K.woff2   Anthropic Serif
-         ├── cat.gif
-         ├── run.gif
-         ├── face-1.png
-         ├── face-2.png
-         ├── face-3.png
-         ├── face-4.png
-         ├── face-5.png
-         └── face-6.png
+        ├── fonts/
+        │   ├── newsreader.woff2
+        |	├── newsreader-italic.woff2  embedded font
+        |	└── OFL.txt
+        ├── cat.gif
+        ├── run.gif
+        ├── face-1.png
+        ├── face-2.png
+        ├── face-3.png
+        ├── face-4.png
+        ├── face-5.png
+        └── face-6.png
 ```
 
 ## Color Palette

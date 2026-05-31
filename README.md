@@ -43,7 +43,9 @@ themes/
 ├── maodie.css                  主样式表，约 2600 行，55 节
 └── maodie/
     ├── fonts/
-    │   └── c66fc489e-C-BHYa_K.woff2    内嵌字体
+    │   ├── newsreader.woff2
+    |	├── newsreader-italic.woff2内嵌字体
+    |	└── OFL.txt
     ├── cat.gif                 骑车耄耋
     ├── run.gif                 跑步耄耋
     ├── face-1.png ~ face-5.png 列表层级 marker

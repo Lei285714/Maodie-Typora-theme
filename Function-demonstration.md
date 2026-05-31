@@ -35,16 +35,18 @@ tags: [maodie, hajimi, haqi, 耄耋, 哈基米, 哈气]
      themes/
      ├── maodie.css              ← 本文件
      └── maodie/
-         ├── fonts/
-         │   └── c66fc489e-C-BHYa_K.woff2   (Anthropic Serif)
-         ├── cat.gif             
-         ├── run.gif             
-         ├── face-1.png          
-         ├── face-2.png          
-         ├── face-3.png          
-         ├── face-4.png          
-         ├── face-5.png          
-         └── face-6.png          
+        ├── fonts/
+        │   ├── newsreader.woff2
+        |	├── newsreader-italic.woff2 内嵌字体
+        |	└── OFL.txt
+        ├── cat.gif             
+        ├── run.gif             
+        ├── face-1.png          
+        ├── face-2.png          
+        ├── face-3.png          
+        ├── face-4.png          
+        ├── face-5.png          
+        └── face-6.png          
 ```
 
 ## 配色板
