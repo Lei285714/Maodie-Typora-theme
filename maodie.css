@@ -13,7 +13,10 @@
          │   ├── newsreader-italic.woff2   (Newsreader 斜体, 同上)
          │   └── OFL.txt                   (字体许可证，分发时随附)
          ├── cat.gif             ← 侧栏底部骑车耄耋（40x40 朝左）
-         ├── run.gif             ← 主滚动条上跑步耄耋（40x40，附在 thumb 上）还有一些其它的可供替换的版本，一并按run2、run3来命名
+         ├── run.gif             ← 主滚动条上跑步耄耋（40x40，附在 thumb 上）
+         ├── run2.gif            ← 跑步耄耋备选动画（替换 run.gif 即可换款）
+         ├── run3.gif            ← 同上，备选
+         ├── run4.gif            ← 同上，备选
          ├── face-1.png          ← 无序列表 L1 marker（64x64 圆形扣图，20px 显示）
          ├── face-2.png          ← 无序列表 L2 marker（18px 显示）
          ├── face-3.png          ← 无序列表 L3 marker（16px 显示）
@@ -23,8 +26,9 @@
                                    尺寸从 H1=20px 递减到 H6=10px
    ------------------------------------------------------------
    色板：暗金棕（Mellow Bronze）
-     主色 8 + 功能色 3 + 半透明叠加做临时态
-     原则：色板不膨胀，hover / selection / mark 全由 rgba 派生
+     主色 9 + 功能色 3 = 12 色 + 半透明叠加做临时态
+     （背景 3 + 文本 3 + 强调 2 + 边框 1 = 主色 9，加功能色 3，合计 12 色）
+     原则：色板不膨胀，hover / selection / mark / active 全由 rgba 派生
      气质：accent 沉稳，c-amber 清亮，UI 主强调靠位置而非亮度
    ============================================================ */
 
@@ -113,8 +117,9 @@
     --window-border:            1px solid var(--border);
     --item-hover-bg-color:      var(--bg-raised);
     --item-hover-text-color:    var(--text-primary);
-    --active-file-bg-color:     rgba(146, 110, 57, 0.20);
-    --active-file-border-color: var(--accent);
+    --active-file-bg-color:     rgba(146, 110, 57, 0.20);  /* --accent@0.2 叠在 --bg-deep 上 ≈ #D4C094，
+                                                              由色板派生，不引入第 12 色 */
+    --active-file-border-color: var(--accent-bright);
     --active-file-text-color:   var(--text-primary);
     --monospace:                var(--font-mono);
 
@@ -971,6 +976,11 @@ a tt {
    注：pre 元素默认带 overflow，会裁切 absolute 伪元素超出
    padding box 的部分。装饰条 top/bottom 设 -1px 才能盖住
    外边框，因此强制 overflow: visible !important 释放剪裁。
+
+   ::before 双重职责：Typora 会把空块占位提示文字 "input YAML
+   Front Matter. " 塞进 .md-meta-block::before 的 content。
+   这里用 content: "" !important 清掉该提示（提示文案本身价值很低，
+   装饰条视觉更重要），让 ::before 专心做 4px 装饰条。
    ------------------------------------------------------------ */
 #write pre.md-meta-block {
     position: relative;
@@ -984,10 +994,14 @@ a tt {
     padding: 1rem 1.2rem;
     margin-top: 0 !important;
     overflow: visible !important;
+    /* 空 meta-block 没有文字撑开，上下高度很扁，与有内容（哪怕只输入
+       一串字符）的高度差距明显。设 min-height 让空块一开始就撑到
+       "输入一行文字后"的高度（实测 53.72px），空/有内容视觉一致。 */
+    min-height: 53.72px;
 }
 
 #write pre.md-meta-block::before {
-    content: "";
+    content: "" !important;
     position: absolute;
     top: -1px;
     bottom: -1px;
@@ -1678,43 +1692,20 @@ mark {
 
 /* ------------------------------------------------------------
    30. 文件树
-   ------------------------------------------------------------ */
+   ------------------------------------------------------------
+   采用 Typora 内置默认行为（同 github.css 风格）：active 背景与
+   左侧装饰条都由内置规则画在 .file-node-background 层上，颜色取
+   :root 的 --active-file-bg-color / --active-file-border-color。
+   hover 不做整行高亮（避免 :has() 回溯误染父文件夹、避免 background
+   层不铺满的缝隙问题），仅保留内置的图标可见行为。
+   不给 .file-tree-node 设 border: none，否则会盖掉内置装饰条。 */
 .file-list-item,
 .file-tree-node {
-    background-color: transparent;
     color: var(--text-secondary);
-    border: none;
-    transition: background 0.12s ease, color 0.12s ease;
+    transition: color 0.12s ease;
 }
 
-.file-list-item:hover,
-.file-tree-node:hover,
-.file-node-content:hover {
-    background-color: var(--bg-raised);
-    color: var(--text-primary);
-}
-
-/* 当前激活的文件 */
-.file-list-item.active,
-.file-tree-node.active,
-.file-list-item-file-name.active {
-    background-color: rgba(146, 110, 57, 0.22);
-    color: var(--text-primary);
-    position: relative;
-}
-
-.file-list-item.active::before,
-.file-tree-node.active::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--accent-bright);
-}
-
-/* 文件 / 文件夹图标 */
+/* 文件 / 文件夹图标：默认弱化，hover 时显形（Typora 内置行为补充染色） */
 .file-node-icon,
 .file-node-open-state {
     color: var(--text-muted);
@@ -1759,10 +1750,10 @@ mark {
 .outline-active::before {
     content: "";
     position: absolute;
-    left: 0;
+    left: -4px;                 /* 左移 4px，避免装饰条压住大纲文字左侧 */
     top: 0;
     bottom: 0;
-    width: 2px;
+    width: 4px;
     background: var(--accent-bright);
 }
 

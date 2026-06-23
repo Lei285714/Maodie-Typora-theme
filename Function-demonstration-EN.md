@@ -19,7 +19,7 @@ tags: [maodie, hajimi, haqi, 耄耋, 哈基米, 哈气]
 
 ## What kind of cat is this
 
-- **Dark gold-brown palette**: an 11-color set, from milk-cream to deep brown-black, from amber gold to deep sea blue
+- **Dark gold-brown palette**: an 12-color set, from milk-cream to deep brown-black, from amber gold to deep sea blue
 - **Many Maodies**: a bike-riding one, a building-jumping one... sneaking in hisses when you aren't looking
 - **Full coverage**: 55 CSS sections take over the entire Typora interface — all-round, three-dimensional, multi-faceted hissing
 - **Rich editor feedback**: cat faces marking heading levels, decoration bars on code blocks, auto-resizing Mermaid diagrams
@@ -41,6 +41,9 @@ Project structure:
         |	└── OFL.txt
         ├── cat.gif
         ├── run.gif
+        ├── run2.gif            ← alternative version of running Maodie
+        ├── run3.gif            ← alternative version of running Maodie
+        ├── run4.gif            ← alternative version of running Maodie
         ├── face-1.png
         ├── face-2.png
         ├── face-3.png
@@ -57,8 +60,11 @@ Project structure:
 | `--bg-raised` | `#F5EAD0` | lightened milk-tea |
 | `--bg-deep` | `#E5D4AB` | deep milk-tea sidebar |
 | `--text-primary` | `#39140A` | very deep red-brown-black |
+| `--text-secondary` | `#805C30` | Secondary text / Italic |
+| `--text-muted` | `#8E7858` | Subdued text / Annotation |
 | `--accent` | `#926E39` | dark gold-brown UI accent |
 | `--accent-bright` | `#6E4E20` | deep brown links / focus |
+| `--border` | `#DCC6A0` | Generic border |
 | `--c-amber` | `#AE7821` | amber gold for code strings |
 | `--c-blue` | `#2A5482` | deep sea blue for function names |
 | `--c-rose` | `#B82318` | pure red for exception warnings |
@@ -107,7 +113,7 @@ Links have two states: by default, [a low-emphasis underline](https://typora.io)
 
 #### Task list
 
-- [x] 11-color dark gold-brown palette
+- [x] 12-color dark gold-brown palette
 - [x] Biking Maodie and running Maodie
 - [x] Heading edit-mode level cat faces
 - [x] Mermaid auto-height

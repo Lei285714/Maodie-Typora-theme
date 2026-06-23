@@ -28,7 +28,7 @@ Restart Typora, then go to **Menu Bar → Themes → maodie**. Effective immedia
 
 ## Design Highlights
 
-**11-color palette**: from milk-cream base to deep red-brown text, from amber gold to deep sea blue for code. The full palette is extracted into CSS variables defined on `:root`, making it easy to extend or derive new variants.
+**12-color palette**: from milk-cream base to deep red-brown text, from amber gold to deep sea blue for code. The full palette is extracted into CSS variables defined on `:root`, making it easy to extend or derive new variants.
 
 **Two distinct shades of gold-brown**: the UI's main accent uses `#926E39`, a steady burnt gold; code strings use `#AE7821`, a brighter clear gold. Code strings are louder than the UI accent on purpose, because code gets read more often.
 
@@ -48,6 +48,9 @@ themes/
     |	└── OFL.txt
     ├── cat.gif                 biking Maodie
     ├── run.gif                 running Maodie
+    ├── run2.gif            	alternative version of running Maodie
+    ├── run3.gif          		alternative version of running Maodie
+    ├── run4.gif                alternative version of running Maodie
     ├── face-1.png ~ face-5.png list level markers
     └── face-6.png              heading edit-mode level marker
 ```
