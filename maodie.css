@@ -10,7 +10,7 @@
          ├── fonts/
          │   ├── newsreader.woff2          (Newsreader 正体, OFL-1.1,
          │   │                              Production Type / Google Fonts)
-         │   ├── newsreader-italic.woff2   (Newsreader 斜体, 同上)
+         │   ├── newsreader-Italic.woff2   (Newsreader 斜体, 同上)
          │   └── OFL.txt                   (字体许可证，分发时随附)
          ├── cat.gif             ← 侧栏底部骑车耄耋（40x40 朝左）
          ├── run.gif             ← 主滚动条上跑步耄耋（40x40，附在 thumb 上）
@@ -50,7 +50,7 @@
 
    内嵌文件（放入 ./maodie/fonts/）：
      newsreader.woff2          ← 正体  (Newsreader-VariableFont_opsz,wght)
-     newsreader-italic.woff2   ← 斜体  (Newsreader-Italic-VariableFont_opsz,wght)
+     newsreader-Italic.woff2   ← 斜体  (Newsreader-Italic-VariableFont_opsz,wght)
     附带的许可证是 OFL 协议的合规要求。
 
    ── 想换成自己喜欢的字体？──
@@ -71,7 +71,7 @@
 
 @font-face {
     font-family: "Newsreader";
-    src: url("./maodie/fonts/newsreader-italic.woff2") format("woff2");
+    src: url("./maodie/fonts/newsreader-Italic.woff2") format("woff2");
     font-weight: 200 800;
     font-style: italic;
     font-display: swap;
@@ -1044,6 +1044,7 @@ a tt {
 }
 
 /* 匹配的括号高亮 */
+div.CodeMirror span.CodeMirror-matchingbracket,
 .CodeMirror-matchingbracket {
     color: var(--accent-bright) !important;
     background: rgba(146, 110, 57, 0.20);
@@ -1078,71 +1079,121 @@ a tt {
    设计要点：accent 比 c-amber 更暗，是新色板的有意选择。
      代码块里"字符串"比 UI"主强调"更显眼，因为代码阅读频率高
      而 UI 元素靠位置和形状本身已足够引人注意。
+
+   特异度说明（2026-07 修复）：Typora 内置的 CodeMirror 默认
+   配色写作 .cm-s-inner .cm-xxx（0,2,0），裸类 .cm-xxx（0,1,0）
+   打不过——本节色板此前从未真正在围栏代码里生效，显示的是
+   CM 出厂默认色（紫关键字 / 暗红字符串 / 橙注释），只因它们
+   在米色底上恰好可读而未暴露；无竞争的属性（如关键字加粗）
+   却在生效，属于逐属性分头打架的混合态。因此本节所有规则
+   一律带 .cm-s-inner（围栏代码）与 .cm-s-typora-default
+   （源代码模式，此前同样从未被主题覆盖）前缀——等特异度、
+   主题后加载取胜；裸类保留作兜底。
    ------------------------------------------------------------ */
 
 /* 关键字、原子、内建函数 */
+.cm-s-inner .cm-keyword,
+.cm-s-typora-default .cm-keyword,
 .cm-keyword,
+.cm-s-inner .cm-atom,
+.cm-s-typora-default .cm-atom,
 .cm-atom,
+.cm-s-inner .cm-builtin,
+.cm-s-typora-default .cm-builtin,
 .cm-builtin {
     color: var(--accent-bright);
     font-weight: 600;
 }
 
 /* 数字 / 字符串 / 常量 —— 数据型 token */
+.cm-s-inner .cm-number,
+.cm-s-typora-default .cm-number,
 .cm-number,
+.cm-s-inner .cm-string,
+.cm-s-typora-default .cm-string,
 .cm-string,
+.cm-s-inner .cm-string-2,
+.cm-s-typora-default .cm-string-2,
 .cm-string-2 {
     color: var(--c-amber);
 }
 
 /* 类型、定义点（函数定义中的函数名、变量声明中的变量名） */
+.cm-s-inner .cm-type,
+.cm-s-typora-default .cm-type,
 .cm-type,
+.cm-s-inner .cm-def,
+.cm-s-typora-default .cm-def,
 .cm-def {
     color: var(--c-blue);
 }
 
 /* 函数调用、属性访问、变量级别 2 / 3 */
+.cm-s-inner .cm-property,
+.cm-s-typora-default .cm-property,
 .cm-property,
+.cm-s-inner .cm-variable-2,
+.cm-s-typora-default .cm-variable-2,
 .cm-variable-2,
+.cm-s-inner .cm-variable-3,
+.cm-s-typora-default .cm-variable-3,
 .cm-variable-3,
+.cm-s-inner .cm-qualifier,
+.cm-s-typora-default .cm-qualifier,
 .cm-qualifier {
     color: var(--c-blue);
     font-weight: 600;
 }
 
 /* HTML / XML 标签 */
+.cm-s-inner .cm-tag,
+.cm-s-typora-default .cm-tag,
 .cm-tag {
     color: var(--c-rose);
 }
 
 /* HTML 属性、装饰器：用 accent 体现"修饰" */
+.cm-s-inner .cm-attribute,
+.cm-s-typora-default .cm-attribute,
 .cm-attribute,
+.cm-s-inner .cm-meta,
+.cm-s-typora-default .cm-meta,
 .cm-meta {
     color: var(--accent);
 }
 
 /* 括号 */
+.cm-s-inner .cm-bracket,
+.cm-s-typora-default .cm-bracket,
 .cm-bracket {
     color: var(--text-secondary);
 }
 
 /* 注释，最弱化 */
+.cm-s-inner .cm-comment,
+.cm-s-typora-default .cm-comment,
 .cm-comment {
     color: var(--text-muted);
     font-style: italic;
 }
 
 /* 运算符 */
+.cm-s-inner .cm-operator,
+.cm-s-typora-default .cm-operator,
 .cm-operator {
     color: var(--text-secondary);
 }
 
 /* 变量名（通用变量引用） */
+.cm-s-inner .cm-variable,
+.cm-s-typora-default .cm-variable,
 .cm-variable {
     color: var(--text-primary);
 }
 
 /* 错误 / 非法 token */
+.cm-s-inner .cm-error,
+.cm-s-typora-default .cm-error,
 .cm-error {
     color: var(--c-rose);
     background: rgba(184, 35, 24, 0.10);
@@ -1150,37 +1201,51 @@ a tt {
 }
 
 /* 链接（在 markdown 代码块里的链接片段） */
+.cm-s-inner .cm-link,
+.cm-s-typora-default .cm-link,
 .cm-link {
     color: var(--accent-bright);
     text-decoration: underline;
     text-decoration-color: rgba(146, 110, 57, 0.45);
 }
 
+.cm-s-inner .cm-url,
+.cm-s-typora-default .cm-url,
 .cm-url {
     color: var(--text-muted);
 }
 
 /* Markdown 自身的代码块里：标题 / 引用 / 列表标记 */
+.cm-s-inner .cm-header,
+.cm-s-typora-default .cm-header,
 .cm-header {
     color: var(--text-primary);
     font-weight: 700;
 }
 
+.cm-s-inner .cm-quote,
+.cm-s-typora-default .cm-quote,
 .cm-quote {
     color: var(--text-secondary);
     font-style: italic;
 }
 
+.cm-s-inner .cm-hr,
+.cm-s-typora-default .cm-hr,
 .cm-hr {
     color: var(--text-muted);
 }
 
 /* Diff / 补丁文件
    diff 的 + 号沿用约定俗成的绿色 #5C8A6E */
+.cm-s-inner .cm-positive,
+.cm-s-typora-default .cm-positive,
 .cm-positive {
     color: #5C8A6E;
 }
 
+.cm-s-inner .cm-negative,
+.cm-s-typora-default .cm-negative,
 .cm-negative {
     color: var(--c-rose);
 }
@@ -1568,7 +1633,6 @@ mark {
    故主动画起点设在右端、scaleX(1) 对应"向左移动"阶段。
 
    ▸ drop-shadow filter 给猫加一层暖棕调阴影，体现立体感
-   ▸ hover 暂停动画，便于鼠标停留时观察细节
    ▸ :active 触发跳跃。纯 CSS 受限：:active 在抬起瞬间撤销
      动画，因此短按只看得到部分跳跃，长按可看到完整一次。
      持久化的"一次完整跳跃"需要 JS 配合，此处不启用。
@@ -1599,11 +1663,6 @@ mark {
     pointer-events: auto;
     cursor: pointer;
     z-index: 5;
-}
-
-/* hover 触发暂停效果，便于鼠标停留时观察细节 */
-#typora-sidebar::before:hover {
-    animation-play-state: paused;
 }
 
 /* 点击瞬间触发跳跃：通过侧栏 :active 状态。
@@ -2204,6 +2263,14 @@ progress {
 
    ▸ background-size 与 thumb 宽度均为 40px，猫占满 thumb
      整个宽度。再放大会被 thumb 边界裁切猫脸。
+
+   ▸ 防裁切（2026-07 修复）：min-height 56px 在轨道过短
+     （超长文档 + 小窗口）时会被引擎强行压缩，定尺寸背景
+     随之裁切。故在 40px 40px 兜底行之后追加
+     auto min(40px, 88%)：高取 40px 与 thumb 高 88% 的
+     较小者、宽按方形等比跟随——thumb 被压短时猫整体
+     缩小保持完整，恢复后回满；旧引擎不识别 min() 时
+     自动退回前一行。
    ------------------------------------------------------------ */
 
 body::-webkit-scrollbar,
@@ -2227,6 +2294,8 @@ content::-webkit-scrollbar-thumb,
 #write::-webkit-scrollbar-thumb {
     background: url("./maodie/run.gif") center / 40px 40px no-repeat,
                 transparent;
+    background: url("./maodie/run.gif") center / auto min(40px, 88%) no-repeat,
+                transparent;
     background-color: transparent;
     border: none;
     border-radius: 0;
@@ -2245,6 +2314,8 @@ content::-webkit-scrollbar-thumb:active,
 #write-style::-webkit-scrollbar-thumb:active,
 #write::-webkit-scrollbar-thumb:active {
     background: url("./maodie/run.gif") center / 40px 40px no-repeat,
+                transparent;
+    background: url("./maodie/run.gif") center / auto min(40px, 88%) no-repeat,
                 transparent;
 }
 

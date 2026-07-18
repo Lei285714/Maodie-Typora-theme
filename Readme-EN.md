@@ -12,13 +12,13 @@ After installation, start by reading the `Function-demonstration-EN.md` inside t
 
 ## Preview
 
-![image-20260520171547216](image-20260520171547216.png)
+![演示图片1](演示图片1.png)
 
-![image-20260520171606437](image-20260520171606437.png)
+![演示图片2](演示图片2.png)
 
-![image-20260520171628808](image-20260520171628808.png)
+![演示图片3](演示图片3.png)
 
-![image-20260520171655381](image-20260520171655381.png)
+![演示图片4](演示图片4.png)
 
 ## Installation
 
@@ -34,7 +34,7 @@ Restart Typora, then go to **Menu Bar → Themes → maodie**. Effective immedia
 
 **Rich editor feedback**: headings entering edit mode show level cat faces — H1 = 1 face at 20px, H6 = 6 faces at 10px. Code block decoration bars precisely cover the border miter joints. The formula editing area's background matches the document's tone, instead of Typora's default `#F5F6F7` gray.
 
-**Two Maodies**: one GIF rides a bike in a loop at the bottom of the sidebar — hover to pause, press and hold to make it jump. The other clings to the thumb of the main scrollbar, its position naturally moving with the scroll percentage. Pure CSS, no JS.
+**Two Maodies**: one GIF rides a bike in a loop at the bottom of the sidebar — press and hold to make it jump. The other clings to the thumb of the main scrollbar, its position naturally moving with the scroll percentage. Pure CSS, no JS.
 
 ## Project Structure
 
